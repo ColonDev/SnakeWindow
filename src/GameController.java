@@ -8,16 +8,19 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import Game.Food;
 import Game.Snake;
-import Utilities.*;
+
+import Utilities.Direction;
 
 public class GameController {
+
+    private static final Utilities.CustomConfig config = Utilities.CustomConfig.getInstance("src/config.properties");
     private final Snake snake;
     private final Food food;
     private final JFrame controlFrame;
     private final AtomicBoolean isRunning;
     private final AtomicReference<Direction> direction;
     private final AtomicReference<Direction> nextDirection;
-    private static final int NUM_FOOD = 1;  // Number of food items
+    private static final int NUM_FOOD = config.getIntProperty("numFood", 1);
 
     public GameController() {
         isRunning = new AtomicBoolean(false);

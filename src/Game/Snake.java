@@ -1,6 +1,7 @@
 package Game;
 
 import Utilities.Direction;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -8,9 +9,12 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static Game.Food.WINDOW_SIZE;
+
 public class Snake {
+    private static final Utilities.CustomConfig config = Utilities.CustomConfig.getInstance("src/config.properties");
     public static final int MOVE_SPEED = 100;
-    private static final int WINDOW_SIZE = 20;
+    private static final int size = config.getIntProperty("size", 20);
     private static final int STEP_SIZE = 20;
 
     private final LinkedList<JWindow> snakeSegments = new LinkedList<>();

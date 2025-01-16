@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Food {
-    private static final int WINDOW_SIZE = 20;
+    static final int WINDOW_SIZE = 20;
+
     private static final Color FOOD_COLOR = new Color(220, 20, 60);
 
     private final List<JWindow> foodWindows;
