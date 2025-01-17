@@ -1,5 +1,6 @@
 package Game;
 
+import Configuration.ConfigReader;
 import Utilities.Direction;
 
 import javax.swing.*;
@@ -12,10 +13,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import static Game.Food.WINDOW_SIZE;
 
 public class Snake {
-    private static final Utilities.CustomConfig config = Utilities.CustomConfig.getInstance("src/config.properties");
-    public static final int MOVE_SPEED = 100;
+    private static final ConfigReader config = ConfigReader.getInstance("src/config.properties");
+    public static final int MOVE_SPEED = 100 / config.getIntProperty("speed", 1);
     private static final int size = config.getIntProperty("size", 20);
-    private static final int STEP_SIZE = 20;
+    private static final int STEP_SIZE = size;
 
     private final LinkedList<JWindow> snakeSegments = new LinkedList<>();
     private final LinkedList<Point> positions = new LinkedList<>();
@@ -166,5 +167,9 @@ public class Snake {
 
     public void dispose() {
         snakeSegments.forEach(Window::dispose);
+    }
+
+    public static int getSize() {
+        return size;
     }
 }

@@ -1,14 +1,14 @@
-package Utilities;
+package Configuration;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class CustomConfig {
-    private static CustomConfig instance;
+public class ConfigReader {
+    private static ConfigReader instance;
     private final Properties properties;
 
-    private CustomConfig(String configFilePath) {
+    private ConfigReader(String configFilePath) {
         properties = new Properties();
         try (FileInputStream fis = new FileInputStream(configFilePath)) {
             properties.load(fis);
@@ -17,9 +17,9 @@ public class CustomConfig {
         }
     }
 
-    public static CustomConfig getInstance(String configFilePath) {
+    public static ConfigReader getInstance(String configFilePath) {
         if (instance == null) {
-            instance = new CustomConfig(configFilePath);
+            instance = new ConfigReader(configFilePath);
         }
         return instance;
     }

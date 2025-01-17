@@ -1,19 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import Configuration.ConfigReader;
 import Game.Food;
 import Game.Snake;
-
 import Utilities.Direction;
 
 public class GameController {
 
-    private static final Utilities.CustomConfig config = Utilities.CustomConfig.getInstance("src/config.properties");
+    private static final ConfigReader config = ConfigReader.getInstance("src/config.properties");
     private final Snake snake;
     private final Food food;
     private final JFrame controlFrame;
@@ -95,22 +94,7 @@ public class GameController {
             if (isRunning.get()) {
                 EventQueue.invokeLater(() -> {
                     snake.move();
-                    List<Point> foodPositions = food.getPositions();
-                    List<Point> snakePositions = new LinkedList<>(snake.getPositions());
-                    boolean foodCollected = false;
-                    for (Point foodPosition : foodPositions) {
-                        for (Point snakePosition : snakePositions) {
-                            if (snakePosition.equals(foodPosition)) {
-                                foodCollected = true;
-                                break;
-                            }
-                        }
-                        if (foodCollected) {
-                            snake.grow();
-                            food.respawnFood(foodPosition, snake.getPositions());
-                            break;
-                        }
-                    }
+                    checkFoodCollision();
                     if (snake.hasCollidedWithItself() || !snake.isWithinBounds()) {
                         gameOver();
                     }
@@ -119,6 +103,22 @@ public class GameController {
         });
         timer.setCoalesce(true);
         timer.start();
+    }
+
+    private void checkFoodCollision() {
+        List<Point> foodPositions = food.getPositions();
+        Point snakeHead = snake.getPositions().getFirst();
+        Rectangle snakeHeadRect = new Rectangle(snakeHead.x, snakeHead.y, Snake.getSize(), Snake.getSize());
+
+        for (Point foodPosition : foodPositions) {
+            Rectangle foodRect = new Rectangle(foodPosition.x, foodPosition.y, Snake.getSize(), Snake.getSize());
+            if (snakeHeadRect.intersects(foodRect)) {
+                snake.grow();
+                food.removeFood(foodPosition);
+                food.addNewFood(controlFrame);
+                break;
+            }
+        }
     }
 
     private void gameOver() {

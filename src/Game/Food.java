@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Food {
-    static final int WINDOW_SIZE = 20;
+    static final int WINDOW_SIZE = Snake.getSize();
 
     private static final Color FOOD_COLOR = new Color(220, 20, 60);
 
@@ -90,19 +90,24 @@ public class Food {
         });
     }
 
-    public List<Point> getPositions() {
-        return foodPositions;
+    public void removeFood(Point foodPosition) {
+        int index = foodPositions.indexOf(foodPosition);
+        if (index != -1) {
+            JWindow foodWindow = foodWindows.get(index);
+            foodWindow.dispose();
+            foodWindows.remove(index);
+            foodPositions.remove(index);
+        }
     }
 
-    public void respawnFood(Point eatenFoodPosition, LinkedList<Point> positions) {
-        int index = foodPositions.indexOf(eatenFoodPosition);
-        if (index != -1) {
-            // Remove the eaten food position
-            foodPositions.remove(index);
-            JWindow foodWindow = foodWindows.get(index);
-            // Spawn new food at a valid position
-            spawn(foodWindow);
-        }
+    public void addNewFood(JFrame controlFrame) {
+        JWindow newFoodWindow = createFoodWindow(controlFrame);
+        foodWindows.add(newFoodWindow);
+        spawn(newFoodWindow);
+    }
+
+    public List<Point> getPositions() {
+        return foodPositions;
     }
 
     public void dispose() {
